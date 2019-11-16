@@ -12,7 +12,14 @@ public class Main {
         // System.out.println("Enter your expression");
         // String expression = in.nextLine();
         // System.out.println("Answer: " + Calculator.calculate(expression));
-        System.out.println(Calculator.table.get("+").get("+"));
+        // System.out.println(Calculator.table.get("+").get("+"));
+        Expression expression = new Expression("15/3");
+        System.out.println("Expression before: ");
+        System.out.println(expression.str);
+        System.out.println("getNext result: ");
+        System.out.println(expression.getNext());
+        System.out.println("Expression after: ");
+        System.out.println(expression.str);
     }
 }
 
@@ -25,8 +32,8 @@ public class Main {
  */
 
 class Calculator {
-    Stack<String> stack;
-    static Map<String, Map<String, Integer> > table = new HashMap<>();
+    private static Stack<String> stack;
+    static Map<String, Map<String, Integer> > table = new HashMap<>(); // make it private
         static {
             Map<String, Integer> line1 = new HashMap<>();
                 line1.put("+", 1);
@@ -67,6 +74,35 @@ class Calculator {
 
 
     public static double calculate(String expression) {
+        stack.push("");
+
         return 0;
+    }
+}
+// TODO: let negative numbers in expression
+class Expression {
+    String str;
+    public Expression(String expression) {
+        this.str = expression;
+    }
+    public String getNext() {
+        String ret = "";
+        if(this.str.startsWith("(")) {
+            ret = this.str.substring(0,1);
+            this.str = this.str.substring(1);
+        } else {
+            while(Character.isDigit(this.str.charAt(0))) {
+                ret += this.str.substring(0,1);
+                this.str = this.str.substring(1);
+            }
+            if (ret.isEmpty()) {
+                ret = "error";
+            } else {
+                ret += this.str.substring(0,1);
+                this.str = this.str.substring(1);
+            }
+        }
+        return ret;
+
     }
 }
