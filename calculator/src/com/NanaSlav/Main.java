@@ -9,17 +9,8 @@ public class Main {
 
     private static Scanner in = new Scanner(System.in);
     public static void main(String[] args) {
-        // System.out.println("Enter your expression");
-        // String expression = in.nextLine();
-        // System.out.println("Answer: " + Calculator.calculate(expression));
-        // System.out.println(Calculator.table.get("+").get("+"));
-        Expression expression = new Expression("15/3");
-        System.out.println("Expression before: ");
-        System.out.println(expression.str);
-        System.out.println("getNext result: ");
-        System.out.println(expression.getNext());
-        System.out.println("Expression after: ");
-        System.out.println(expression.str);
+        MyTests tests = new MyTests();
+        tests.testExpression();
     }
 }
 
@@ -79,7 +70,7 @@ class Calculator {
         return 0;
     }
 }
-// TODO: let negative numbers in expression
+
 class Expression {
     String str;
     public Expression(String expression) {
@@ -87,21 +78,51 @@ class Expression {
     }
     public String getNext() {
         String ret = "";
-        if(this.str.startsWith("(")) {
-            ret = this.str.substring(0,1);
-            this.str = this.str.substring(1);
-        } else {
-            while(Character.isDigit(this.str.charAt(0))) {
-                ret += this.str.substring(0,1);
+        if (this.str.length() != 0) {
+            if(this.str.startsWith("(")) {
+                ret = this.str.substring(0,1);
                 this.str = this.str.substring(1);
-            }
-            if (ret.isEmpty()) {
-                ret = "error";
             } else {
-                ret += this.str.substring(0,1);
-                this.str = this.str.substring(1);
+                if (this.str.startsWith(")")) {
+                    this.str = this.str.substring(1);
+                    if (Character.isDigit(this.str.charAt(0))) {
+                        ret = "error";
+                    } else {
+                            ret = this.str.substring(0,1);
+                            if (this.str.charAt(0) != ')') {
+                                this.str = this.str.substring(1);
+                            }
+                    }
+                    return ret;
+                }
+                if (this.str.charAt(0) == '-' && Character.isDigit(this.str.charAt(1))) {
+                    ret += this.str.substring(0,1);
+                    this.str = this.str.substring(1);
+                }
+                while(Character.isDigit(this.str.charAt(0)) && this.str.length() != 0) {
+                    if (this.str.length() != 1) {
+                        ret += this.str.substring(0,1);
+                        this.str = this.str.substring(1);
+                    } else {
+                        ret += this.str;
+                        this.str = "";
+                        return ret;
+                    }
+                }
+                if (ret.isEmpty()) {
+                    ret = "error";
+                } else {
+                    if (this.str.length() > 0) {
+                        ret += this.str.substring(0,1);
+                        if (this.str.charAt(0) != ')') {
+                            this.str = this.str.substring(1);
+                        }
+                    }
+
+                }
             }
         }
+
         return ret;
 
     }
