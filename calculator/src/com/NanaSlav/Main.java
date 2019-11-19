@@ -11,8 +11,9 @@ public class Main {
     public static void main(String[] args) {
         MyTests tests = new MyTests();
         tests.testExpression();
-        Expression ex2 = new Expression("(2*(3-1))+4");
-        Calculator.calculate(ex2);
+        // Expression ex2 = new Expression("(2*(3-1))+4");
+        // Calculator.calculate(ex2);
+        System.out.println(Calculator.calculateTriple("12.5+1"));
     }
 }
 
@@ -96,13 +97,13 @@ class Calculator {
                 int operation = table.get(stackSymbol).get(symbols.substring(symbols.length() - 1));
                 switch (operation) {
                     case 1:
-                        // TODO: add realization of <
                         stack.push(symbols);
                         System.out.println("<");
                         break;
                     case 2:
                         // TODO: add realization of >
                         stack.pop();
+
                         System.out.println(">");
                         break;
                     case 3:
@@ -124,6 +125,33 @@ class Calculator {
 
 
         return 0;
+    }
+    //private static double calculateTriple(String triple) {
+    public static double calculateTriple(String triple) {
+        int i = 0;
+        while (Character.isDigit(triple.charAt(i)) || triple.charAt(i) == '.') {
+            i++;
+        }
+        Double firstNum = Double.valueOf(triple.substring(0, i));
+        Double secondNum = Double.valueOf(triple.substring(i + 1));
+        double retNum = 0;
+        char operator = triple.charAt(i);
+
+        switch (operator) {
+            case '+':
+                retNum = firstNum + secondNum;
+                break;
+            case '-':
+                retNum = firstNum - secondNum;
+                break;
+            case '*':
+                retNum = firstNum * secondNum;
+                break;
+            case '/':
+                retNum = firstNum / secondNum;
+                break;
+        }
+        return retNum;
     }
 }
 
