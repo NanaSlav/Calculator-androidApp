@@ -11,6 +11,8 @@ public class Main {
     public static void main(String[] args) {
         MyTests tests = new MyTests();
         tests.testExpression();
+        Expression ex2 = new Expression("(2*(3-1))+4");
+        Calculator.calculate(ex2);
     }
 }
 
@@ -23,49 +25,103 @@ public class Main {
  */
 
 class Calculator {
-    private static Stack<String> stack;
     static Map<String, Map<String, Integer> > table = new HashMap<>(); // make it private
         static {
             Map<String, Integer> line1 = new HashMap<>();
                 line1.put("+", 1);
+                line1.put("-", 1);
                 line1.put("*", 1);
+                line1.put("/", 1);
                 line1.put("(", 1);
                 line1.put(")", 4);
                 line1.put("", 5);
             Map<String, Integer> line2 = new HashMap<>();
                 line2.put("+", 2);
+                line2.put("-", 2);
                 line2.put("*", 1);
+                line2.put("/", 1);
                 line2.put("(", 1);
                 line2.put(")", 2);
                 line2.put("", 2);
             Map<String, Integer> line3 = new HashMap<>();
                 line3.put("+", 2);
+                line3.put("-", 2);
                 line3.put("*", 2);
+                line3.put("/", 2);
                 line3.put("(", 1);
                 line3.put(")", 2);
                 line3.put("", 2);
             Map<String, Integer> line4 = new HashMap<>();
                 line4.put("+", 1);
+                line4.put("-", 1);
                 line4.put("*", 1);
+                line4.put("/", 1);
                 line4.put("(", 1);
                 line4.put(")", 3);
                 line4.put("", 4);
             Map<String, Integer> line5 = new HashMap<>();
                 line5.put("+", 2);
+                line5.put("-", 2);
                 line5.put("*", 2);
+                line5.put("/", 2);
                 line5.put("(", 4);
                 line5.put(")", 2);
                 line5.put("", 2);
             table.put("", line1);
             table.put("+", line2);
+            table.put("-", line2);
             table.put("*", line3);
+            table.put("/", line3);
             table.put("(", line4);
             table.put(")", line5);
         }
 
+    // TODO: solve problem with ")"
 
-    public static double calculate(String expression) {
+    public static double calculate(Expression expression) {
+        Stack<String> stack = new Stack<>();
         stack.push("");
+        String symbols ="";
+        while (!expression.str.isEmpty()) {
+            symbols = expression.getNext();
+            if (!Character.isDigit(symbols.charAt(symbols.length() - 1))) {
+                // table(stack.peek(), symbols.substring(symbols.length()-2));
+                String lastStackItem = stack.peek();
+                String stackSymbol = "";
+                if (lastStackItem.isEmpty()) {
+                    stackSymbol = lastStackItem;
+                } else {
+                    stackSymbol = lastStackItem.substring(lastStackItem.length() - 1);
+                }
+                int operation = table.get(stackSymbol).get(symbols.substring(symbols.length() - 1));
+                switch (operation) {
+                    case 1:
+                        // TODO: add realization of <
+                        stack.push(symbols);
+                        System.out.println("<");
+                        break;
+                    case 2:
+                        // TODO: add realization of >
+                        stack.pop();
+                        System.out.println(">");
+                        break;
+                    case 3:
+                        // TODO: add realization of =
+                        stack.pop();
+                        System.out.println("=");
+                        break;
+                    case 4:
+                        // TODO: add exception instead
+                        System.out.println("Error");
+                        break;
+                    case 5:
+                        // TODO: add realization of exit
+                        System.out.println("exit");
+                        break;
+                }
+            }
+        }
+
 
         return 0;
     }
