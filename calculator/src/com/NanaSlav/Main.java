@@ -11,6 +11,8 @@ public class Main {
     public static void main(String[] args) {
         MyTests tests = new MyTests();
         tests.testExpression();
+        Expression ex = new Expression("((5+2)*3-1)*4");
+        System.out.println(Calculator.calculate(ex));
 
     }
 }
@@ -75,15 +77,17 @@ class Calculator {
             table.put(")", line5);
         }
 
-    // TODO: solve problem with ")"
 
-    public static double calculate(Expression expression) {
+
+    public static Double calculate(Expression expression) {
         Stack<String> stack = new Stack<>();
         stack.push("");
         String symbols ="";
-        while (!expression.str.isEmpty()) {
-            symbols = expression.getNext();
-            if (!Character.isDigit(symbols.charAt(symbols.length() - 1))) {
+        Double retNum = new Double(0);
+        while (!(expression.str.isEmpty()) || !symbols.isEmpty()) {
+            if (symbols.isEmpty()) {
+                symbols = expression.getNext();
+            }
                 // table(stack.peek(), symbols.substring(symbols.length()-2));
                 String lastStackItem = stack.peek();
                 String stackSymbol = "";
@@ -92,21 +96,39 @@ class Calculator {
                 } else {
                     stackSymbol = lastStackItem.substring(lastStackItem.length() - 1);
                 }
-                int operation = table.get(stackSymbol).get(symbols.substring(symbols.length() - 1));
+                int operation = 0;
+                if (!Character.isDigit(symbols.charAt(symbols.length() - 1))) {
+                    operation = table.get(stackSymbol).get(symbols.substring(symbols.length() - 1));
+                } else {
+                    operation = table.get(stackSymbol).get("");
+                }
+
                 switch (operation) {
                     case 1:
                         stack.push(symbols);
+                        symbols = "";
                         System.out.println("<");
                         break;
                     case 2:
-                        // TODO: add realization of >
-                        stack.pop();
-
-                        System.out.println(">");
+                        String stackItem = stack.pop();
+                        String triple = "";
+                        if (Character.isDigit(symbols.charAt(symbols.length() - 1))) {
+                            triple = stackItem + symbols;
+                        } else {
+                            triple = stackItem + symbols.substring(0, symbols.length() - 1);
+                        }
+                        double result = calculateTriple(triple);
+                        if (Character.isDigit(symbols.charAt(symbols.length() - 1))) {
+                            symbols = String.valueOf(result);
+                        } else {
+                            symbols = String.valueOf(result) + symbols.substring(symbols.length() - 1);
+                        }
+                        System.out.println(result);
                         break;
                     case 3:
-                        // TODO: add realization of =
                         stack.pop();
+                        symbols = symbols.substring(0, symbols.length() - 1);
+                        symbols += expression.getNext();
                         System.out.println("=");
                         break;
                     case 4:
@@ -114,15 +136,14 @@ class Calculator {
                         System.out.println("Error");
                         break;
                     case 5:
-                        // TODO: add realization of exit
+                        retNum = Double.valueOf(symbols);
+                        symbols = "";
                         System.out.println("exit");
                         break;
                 }
-            }
         }
 
-
-        return 0;
+        return retNum;
     }
     //private static double calculateTriple(String triple) {
     public static double calculateTriple(String triple) {
