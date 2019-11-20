@@ -11,6 +11,13 @@ public class Main {
     public static void main(String[] args) {
         MyTests tests = new MyTests();
         tests.testExpression();
+        Expression ex = new Expression("5/(4-3)");
+        try {
+            Calculator.calculate(ex);
+        } catch (Exception exception ) {
+            System.out.println(exception.getMessage());
+        }
+
 
           // in console realization you need to check input string.
     }
@@ -140,7 +147,13 @@ class Calculator {
                 case 3:
                     stack.pop();
                     symbols = symbols.substring(0, symbols.length() - 1);
-                    symbols += expression.getNext();
+                    try {
+                        symbols += expression.getNext();
+                    } catch (Exception exception) {
+
+                    }
+
+
                     break;
                 case 4:
                     throw new Exception("Something wrong with brackets");
@@ -174,7 +187,14 @@ class Calculator {
                 retNum = firstNum * secondNum;
                 break;
             case '/':
-                retNum = firstNum / secondNum;
+                try {
+                    if (secondNum == 0) {
+                        throw new Exception("Division by zero");
+                    }
+                    retNum = firstNum / secondNum;
+                } catch (Exception exception) {
+                    System.out.println(exception.getMessage());
+                }
                 break;
         }
         return retNum;
