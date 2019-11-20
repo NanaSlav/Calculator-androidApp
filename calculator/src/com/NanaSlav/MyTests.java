@@ -9,31 +9,17 @@ public class MyTests {
         Expression ex1 = new Expression("(125-14*3)/2-14");
         Expression ex2 = new Expression("(2*(3-1))+4");
         Expression ex3 = new Expression("0.25+1+7/2");
-        String triple = "25+1.2";
+        try {
+            assertEquals(27.5, Calculator.calculate(ex1), 0.0001);
+            assertEquals(8, Calculator.calculate(ex2), 0.0001);
+            assertEquals(4.75, Calculator.calculate(ex3), 0.0001);
 
-        assertEquals("(",ex1.getNext());
-        assertEquals("125-",ex1.getNext());
-        assertEquals("14*",ex1.getNext());
-        assertEquals("3)",ex1.getNext());
-        assertEquals("/",ex1.getNext());
-        assertEquals("2-",ex1.getNext());
-        assertEquals("14",ex1.getNext());
+        } catch (Exception exception) {
+            System.out.println(exception.getMessage());
+        }
 
-        assertEquals("(",ex2.getNext());
-        assertEquals("2*",ex2.getNext());
-        assertEquals("(",ex2.getNext());
-        assertEquals("3-",ex2.getNext());
-        assertEquals("1)",ex2.getNext());
-        assertEquals(")",ex2.getNext());
-        assertEquals("+",ex2.getNext());
-        assertEquals("4",ex2.getNext());
 
-        assertEquals("0.25+",ex3.getNext());
-        assertEquals("1+",ex3.getNext());
-        assertEquals("7/",ex3.getNext());
-        assertEquals("2",ex3.getNext());
 
-        assertEquals(26.2, Calculator.calculateTriple(triple), 0.0001);
 
     }
 }

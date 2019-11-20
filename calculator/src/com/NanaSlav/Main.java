@@ -11,13 +11,27 @@ public class Main {
     public static void main(String[] args) {
         MyTests tests = new MyTests();
         tests.testExpression();
-        Expression ex = new Expression("((5+2)*3-1)*4");
-        System.out.println(Calculator.calculate(ex));
 
+          // in console realization you need to check input string.
     }
 }
 
 /*
+        Precedence table:
+
+        +  |  *  |  (  |  )  |  ""
+       ----------------------------
+  "" |  <  |  <  |  <  |  ?  | exit
+       ----------------------------
+   + |  >  |  <  |  <  |  >  |  >
+       -----------------------------
+   * |  >  |  >  |  <  |  >  |  >
+       -----------------------------
+   ( |  <  |  <  |  <  |  =  |  ?
+       -----------------------------
+   ) |  >  |  >  |  ?  |  >  |  >
+
+    codes of operations:
     1: <
     2: >
     3: =
@@ -79,74 +93,67 @@ class Calculator {
 
 
 
-    public static Double calculate(Expression expression) {
+    public static Double calculate (Expression expression) throws Exception {
         Stack<String> stack = new Stack<>();
         stack.push("");
         String symbols ="";
-        Double retNum = new Double(0);
+        Double retNum = (double) 0;
         while (!(expression.str.isEmpty()) || !symbols.isEmpty()) {
             if (symbols.isEmpty()) {
                 symbols = expression.getNext();
             }
-                // table(stack.peek(), symbols.substring(symbols.length()-2));
-                String lastStackItem = stack.peek();
-                String stackSymbol = "";
-                if (lastStackItem.isEmpty()) {
-                    stackSymbol = lastStackItem;
-                } else {
-                    stackSymbol = lastStackItem.substring(lastStackItem.length() - 1);
-                }
-                int operation = 0;
-                if (!Character.isDigit(symbols.charAt(symbols.length() - 1))) {
-                    operation = table.get(stackSymbol).get(symbols.substring(symbols.length() - 1));
-                } else {
-                    operation = table.get(stackSymbol).get("");
-                }
+            String lastStackItem = stack.peek();
+            String stackSymbol = "";
+            boolean isLastSymbolDigit = Character.isDigit(symbols.charAt(symbols.length() - 1));
+            if (lastStackItem.isEmpty()) {
+                stackSymbol = lastStackItem;
+            } else {
+                stackSymbol = lastStackItem.substring(lastStackItem.length() - 1);
+            }
+            int operation = 0;
+            if (!isLastSymbolDigit) {
+                operation = table.get(stackSymbol).get(symbols.substring(symbols.length() - 1));
+            } else {
+                operation = table.get(stackSymbol).get("");
+            }
 
-                switch (operation) {
-                    case 1:
-                        stack.push(symbols);
-                        symbols = "";
-                        System.out.println("<");
-                        break;
-                    case 2:
-                        String stackItem = stack.pop();
-                        String triple = "";
-                        if (Character.isDigit(symbols.charAt(symbols.length() - 1))) {
-                            triple = stackItem + symbols;
-                        } else {
-                            triple = stackItem + symbols.substring(0, symbols.length() - 1);
-                        }
-                        double result = calculateTriple(triple);
-                        if (Character.isDigit(symbols.charAt(symbols.length() - 1))) {
-                            symbols = String.valueOf(result);
-                        } else {
-                            symbols = String.valueOf(result) + symbols.substring(symbols.length() - 1);
-                        }
-                        System.out.println(result);
-                        break;
-                    case 3:
-                        stack.pop();
-                        symbols = symbols.substring(0, symbols.length() - 1);
-                        symbols += expression.getNext();
-                        System.out.println("=");
-                        break;
-                    case 4:
-                        // TODO: add exception instead
-                        System.out.println("Error");
-                        break;
-                    case 5:
-                        retNum = Double.valueOf(symbols);
-                        symbols = "";
-                        System.out.println("exit");
-                        break;
-                }
+            switch (operation) {
+                case 1:
+                    stack.push(symbols);
+                    symbols = "";
+                    break;
+                case 2:
+                    String stackItem = stack.pop();
+                    String triple = "";
+                    if (isLastSymbolDigit) {
+                        triple = stackItem + symbols;
+                    } else {
+                        triple = stackItem + symbols.substring(0, symbols.length() - 1);
+                    }
+                    double result = calculateTriple(triple);
+                    if (isLastSymbolDigit) {
+                        symbols = String.valueOf(result);
+                    } else {
+                        symbols = result + symbols.substring(symbols.length() - 1);
+                    }
+                    break;
+                case 3:
+                    stack.pop();
+                    symbols = symbols.substring(0, symbols.length() - 1);
+                    symbols += expression.getNext();
+                    break;
+                case 4:
+                    throw new Exception("Something wrong with brackets");
+                case 5:
+                    retNum = Double.valueOf(symbols);
+                    symbols = "";
+                    break;
+            }
         }
-
         return retNum;
     }
-    //private static double calculateTriple(String triple) {
-    public static double calculateTriple(String triple) {
+
+    private static double calculateTriple(String triple) {
         int i = 0;
         while (Character.isDigit(triple.charAt(i)) || triple.charAt(i) == '.') {
             i++;
@@ -179,6 +186,8 @@ class Expression {
     public Expression(String expression) {
         this.str = expression;
     }
+
+    // returns symbols to analyze
     public String getNext() {
         String ret = "";
         if (this.str.length() != 0) {
