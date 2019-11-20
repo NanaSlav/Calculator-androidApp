@@ -11,9 +11,7 @@ public class Main {
     public static void main(String[] args) {
         MyTests tests = new MyTests();
         tests.testExpression();
-        // Expression ex2 = new Expression("(2*(3-1))+4");
-        // Calculator.calculate(ex2);
-        System.out.println(Calculator.calculateTriple("12.5+1"));
+
     }
 }
 
@@ -169,7 +167,7 @@ class Expression {
             } else {
                 if (this.str.startsWith(")")) {
                     this.str = this.str.substring(1);
-                    if (Character.isDigit(this.str.charAt(0))) {
+                    if (Character.isDigit(this.str.charAt(0)) || this.str.charAt(0) == '.') {
                         ret = "error";
                     } else {
                             ret = this.str.substring(0,1);
@@ -183,7 +181,7 @@ class Expression {
                     ret += this.str.substring(0,1);
                     this.str = this.str.substring(1);
                 }
-                while(Character.isDigit(this.str.charAt(0)) && this.str.length() != 0) {
+                while(((Character.isDigit(this.str.charAt(0))) || (this.str.charAt(0) == '.')) && this.str.length() != 0) {
                     if (this.str.length() != 1) {
                         ret += this.str.substring(0,1);
                         this.str = this.str.substring(1);
