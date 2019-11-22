@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -107,76 +108,25 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }
-        TextView text = (TextView) findViewById(R.id.display);
+
+    }
+
+    public void btnClick(View view) {
+        Button btn = (Button) view;
+        String btnText = btn.getText().toString();
+        if (btnText.equalsIgnoreCase("c")) {
+            ex.str = " ";
+        } else {
+            if (btnText.equalsIgnoreCase("del")) {
+                if (!ex.str.equals(" ")) {
+                    ex.str = ex.str.substring(0,ex.str.length() - 1);
+                }
+            } else {
+                addSymbol(btnText.charAt(0));
+            }
+        }
+        TextView text = findViewById(R.id.display);
         text.setText(ex.str);
-    }
-
-    public void btnOne(View view) {
-        addSymbol('1');
-    }
-
-    public void btnTwo(View view) {
-        addSymbol('2');
-    }
-
-    public void btnThree(View view) {
-        addSymbol('3');
-    }
-
-    public void btnFour(View view) {
-        addSymbol('4');
-    }
-
-    public void btnFive(View view) {
-        addSymbol('5');
-    }
-
-    public void btnSix(View view) {
-        addSymbol('6');
-    }
-
-    public void btnSeven (View view) {
-        addSymbol('7');
-    }
-
-    public void btnEight (View view) {
-        addSymbol('8');
-    }
-
-    public void btnNine (View view) {
-        addSymbol('9');
-    }
-
-    public void btnZero (View view) {
-        addSymbol('0');
-    }
-
-    public void btnPlus (View view) {
-        addSymbol('+');
-    }
-
-    public void btnMinus (View view) {
-        addSymbol('-');
-    }
-
-    public void btnMult (View view) {
-        addSymbol('*');
-    }
-
-    public void btnDiv (View view) {
-        addSymbol('/');
-    }
-
-    public void btnOBracket (View view) {
-        addSymbol('(');
-    }
-
-    public void btnCBracket (View view) {
-        addSymbol(')');
-    }
-
-    public void btnDot (View view) {
-        addSymbol('.');
     }
 
 }
