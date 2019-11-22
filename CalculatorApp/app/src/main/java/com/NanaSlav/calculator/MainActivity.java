@@ -65,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
                                 ex.str += "*" + symbol;
                                 break;
                             default:
-                                ex.str = ex.str.substring(0, ex.str.length() - 1);
                                 ex.str += symbol;
                         }
                     }
@@ -96,16 +95,13 @@ public class MainActivity extends AppCompatActivity {
                                 ex.str += symbol;
                                 break;
                             case ')':
-                                ex.str += "(";
+                                break;
                             default:
                                 ex.str = ex.str.substring(0,ex.str.length() - 1);
                                 ex.str += symbol;
 
                         }
                     }
-
-
-
             }
         }
 
@@ -128,5 +124,53 @@ public class MainActivity extends AppCompatActivity {
         TextView text = findViewById(R.id.display);
         text.setText(ex.str);
     }
+
+    public void calculate (View view) {
+        char lastSymbol = ex.str.charAt(ex.str.length() - 1);
+        if ( lastSymbol == '+' || lastSymbol == '-' ||
+                lastSymbol == '*' || lastSymbol == '/') {
+            ex.str = ex.str.substring(0, ex.str.length() - 1);
+        }
+
+        closeBrackets();
+
+        try {
+            ex.str = ex.str.substring(1);
+            Double result = Calculator.calculate(ex);
+            ex.str = " " + result;
+            // To print integer numbers without .0
+            if (result == Math.floor(result)) {
+                ex.str = ex.str.substring(0,ex.str.length() - 2);
+            }
+            TextView text = findViewById(R.id.display);
+            text.setText(ex.str);
+        } catch (Exception exception) {
+            TextView text = findViewById(R.id.display);
+            text.setText(exception.getMessage());
+        }
+
+    }
+
+    public void closeBrackets() {
+        int numOBrackets = 0;
+        int numCBrackets = 0;
+        for (int i = 0; i < ex.str.length(); i++) {
+            if (ex.str.charAt(i) == ')') numCBrackets++;
+            if (ex.str.charAt(i) == '(') numOBrackets++;
+        }
+
+        if (numCBrackets > numOBrackets) {
+            for (int i = numCBrackets - numOBrackets; i > 0; i--) {
+                ex.str = " (" + ex.str.substring(1);
+            }
+        } else {
+            if (numOBrackets > numCBrackets) {
+                for (int i = numOBrackets - numCBrackets; i > 0; i--) {
+                    ex.str += ")";
+                }
+            }
+        }
+    }
+
 
 }
