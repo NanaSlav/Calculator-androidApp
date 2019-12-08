@@ -118,7 +118,13 @@ public class Calculator {
                     } else {
                         triple = stackItem + symbols.substring(0, symbols.length() - 1);
                     }
-                    double result = calculateTriple(triple);
+                    double result;
+                    try {
+                        result = calculateTriple(triple);
+                    } catch (Exception exception) {
+                        throw exception;
+                    }
+
                     if (isLastSymbolDigit) {
                         symbols = String.valueOf(result);
                     } else {
@@ -147,8 +153,9 @@ public class Calculator {
         return retNum;
     }
 
-    private static double calculateTriple(String triple) {
+    private static double calculateTriple(String triple) throws Exception {
         int i = 0;
+        if (triple.charAt(i) == '-') i++;
         while (Character.isDigit(triple.charAt(i)) || triple.charAt(i) == '.') {
             i++;
         }
@@ -168,14 +175,10 @@ public class Calculator {
                 retNum = firstNum * secondNum;
                 break;
             case '/':
-                try {
                     if (secondNum == 0) {
                         throw new Exception("Division by zero");
                     }
                     retNum = firstNum / secondNum;
-                } catch (Exception exception) {
-                    System.out.println(exception.getMessage());
-                }
                 break;
         }
         return retNum;

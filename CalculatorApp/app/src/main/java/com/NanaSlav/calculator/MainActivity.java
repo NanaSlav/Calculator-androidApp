@@ -83,6 +83,15 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                     break;
+                case ' ':
+                    if (Character.isDigit(symbol) || symbol == '-' || symbol == '(') {
+                        ex.str += symbol;
+                    } else {
+                        if (symbol == '.') {
+                            ex.str += "0.";
+                        }
+                    }
+                    break;
                 default: // It will be operators (+ - * /)
                     if (Character.isDigit(symbol)) {
                         ex.str += symbol;
@@ -95,6 +104,9 @@ public class MainActivity extends AppCompatActivity {
                                 ex.str += symbol;
                                 break;
                             case ')':
+                                break;
+                            case '-':
+                                ex.str += "(-";
                                 break;
                             default:
                                 ex.str = ex.str.substring(0,ex.str.length() - 1);
